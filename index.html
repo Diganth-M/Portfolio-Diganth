@@ -35,11 +35,11 @@ section.content-section{padding:115px 0;position:relative}.section-head{display:
 <script>
 const $=(s,root=document)=>root.querySelector(s),$$=(s,root=document)=>[...root.querySelectorAll(s)];
 const topbar=$('#topbar'),progress=$('#progress'),glow=$('#cursorGlow');
-let lastY=window.scrollY;
-window.addEventListener('scroll',()=>{const y=window.scrollY;topbar.classList.toggle('scrolled',y>20);progress.style.width=(y/(document.documentElement.scrollHeight-innerHeight)*100)+'%';lastY=y},{passive:true});
+let lastY=window.scrollY,scrollDirection='down';
+window.addEventListener('scroll',()=>{const y=window.scrollY;scrollDirection=y>lastY?'down':'up';topbar.classList.toggle('scrolled',y>20);progress.style.width=(y/(document.documentElement.scrollHeight-innerHeight)*100)+'%';lastY=y},{passive:true});
 window.addEventListener('pointermove',e=>{glow.style.opacity='1';glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';const panel=e.target.closest('.panel');if(panel){const r=panel.getBoundingClientRect();panel.style.setProperty('--mx',(e.clientX-r.left)+'px');panel.style.setProperty('--my',(e.clientY-r.top)+'px')}},{passive:true});
 window.addEventListener('pointerleave',()=>glow.style.opacity='0');
-const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){const direction=entry.boundingClientRect.top<0?'from-top':'from-bottom';entry.target.classList.add('visible');entry.target.classList.toggle('from-top',direction==='from-top');observer.unobserve(entry.target)}}),{threshold:.13});
+const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){const direction=scrollDirection==='up'?'from-top':'from-bottom';entry.target.classList.add('visible');entry.target.classList.toggle('from-top',direction==='from-top');observer.unobserve(entry.target)}}),{threshold:.13});
 $$('.reveal').forEach(el=>observer.observe(el));
 $$('.nav-link').forEach(a=>a.addEventListener('click',()=>{$('#navLinks').classList.remove('open');$$('.nav-link').forEach(n=>n.classList.remove('active'));a.classList.add('active')}));
 const menu=$('#menuBtn');menu.addEventListener('click',()=>$('#navLinks').classList.toggle('open'));
