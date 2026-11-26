@@ -150,16 +150,24 @@
   };
   items.forEach(el => el.style.setProperty('--delay', delay(el) + 'ms'));
 
-  const io = new IntersectionObserver(entries => entries.forEach(({ target, isIntersecting, boundingClientRect }) => {
-    if (isIntersecting) {
-      target.classList.add('in');
-    } else {
-      target.classList.remove('in', 'jelly', 'squash');
-      target.classList.toggle('from-top', boundingClientRect.top < 0);
+  // Scroll reveal: animate items into view while keeping a safe fallback.
+  if (!calm && 'IntersectionObserver' in window) {
+    try {
+      const io = new IntersectionObserver(entries => entries.forEach(({ target, isIntersecting, boundingClientRect }) => {
+        if (isIntersecting) {
+          target.classList.add('in');
+        } else {
+          target.classList.remove('in', 'jelly', 'squash');
+          target.classList.toggle('from-top', boundingClientRect.top < 0);
+        }
+      }), { threshold: 0, rootMargin: '0px 0px -6% 0px' });
+      items.forEach(el => io.observe(el));
+    } catch (error) {
+      items.forEach(el => el.classList.add('in'));
     }
-  }), { threshold: 0, rootMargin: '0px 0px -6% 0px' });
-  if (!calm) items.forEach(el => io.observe(el));
-  else items.forEach(el => el.classList.add('in'));
+  } else {
+    items.forEach(el => el.classList.add('in'));
+  }
 
   function onScroll() {
     const y = scrollY;
