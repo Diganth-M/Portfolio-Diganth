@@ -33,21 +33,118 @@ section.content-section{padding:115px 0;position:relative}.section-head{display:
 <section class="content-section" id="contact"><div class="container"><div class="contact-box reveal"><div><div class="section-kicker">05 / GET IN TOUCH</div><h2>Let's build something<br><span class="gradient">meaningful.</span></h2><p>Have an opportunity, a project idea or simply want to connect? Feel free to reach out. I'd be happy to hear from you.</p><a class="btn primary" href="mailto:diganthhema5712@gmail.com">Say hello ↗</a></div><div class="contact-links"><a class="contact-link" href="mailto:diganthhema5712@gmail.com"><span>✉</span><span><small>EMAIL</small>diganthhema5712@gmail.com</span></a><a class="contact-link" href="tel:+919363673277"><span>⌕</span><span><small>PHONE</small>+91 93636 73277</span></a><a class="contact-link" href="https://www.google.com/maps/place/K+Naresh+-+home/@11.0908311,77.9896632,17z/data=!4m14!1m7!3m6!1s0x3baa2b00323930d1:0xe62659ff66ed594a!2sK+Naresh+-+home!8m2!3d11.0908258!4d77.9922381!16s%2Fg%2F11w2gskg4m!3m5!1s0x3baa2b00323930d1:0xe62659ff66ed594a!8m2!3d11.0908258!4d77.9922381?entry=ttu&g_ep=EgoyMDI2MTEyMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer"><span>⌖</span><span><small>LOCATION · OPEN IN MAPS</small>View location on Google Maps</span></a><a class="contact-link" href="https://github.com/Diganth-M" target="_blank" rel="noopener noreferrer"><span>⌘</span><span><small>GITHUB</small>github.com/Diganth-M</span></a><a class="contact-link" href="https://in.linkedin.com/in/diganth-m-982425315" target="_blank" rel="noopener noreferrer"><span>in</span><span><small>LINKEDIN</small>Connect on LinkedIn</span></a></div></div></div></section>
 </main><footer class="footer"><div class="container footer-inner"><span>© <span id="year"></span> M DIGANTH · DESIGNED WITH PURPOSE</span><a class="back-top" href="#home">BACK TO TOP ↑</a></div></footer>
 <script>
-const $=(s,root=document)=>root.querySelector(s),$$=(s,root=document)=>[...root.querySelectorAll(s)];
-const topbar=$('#topbar'),progress=$('#progress'),glow=$('#cursorGlow'),ring=$('#cursorRing');
-window.addEventListener('scroll',()=>{const y=window.scrollY;topbar.classList.toggle('scrolled',y>20);const max=document.documentElement.scrollHeight-innerHeight;progress.style.width=(max>0?y/max*100:0)+'%'},{passive:true});
-window.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;glow.style.opacity='1';glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';ring.style.opacity='1';ring.style.left=e.clientX+'px';ring.style.top=e.clientY+'px';const panel=e.target.closest('.panel');if(panel){const r=panel.getBoundingClientRect();panel.style.setProperty('--mx',(e.clientX-r.left)+'px');panel.style.setProperty('--my',(e.clientY-r.top)+'px')}},{passive:true});
-window.addEventListener('pointerleave',()=>{glow.style.opacity='0';ring.style.opacity='0'});
-const revealItems=$('.reveal');
-if('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-  document.body.classList.add('motion-ready');
-  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}}),{threshold:.10,rootMargin:'0px 0px -5% 0px'});
-  revealItems.forEach(el=>observer.observe(el));
-}else{revealItems.forEach(el=>el.classList.add('visible'))}
-$$('.nav-link').forEach(a=>a.addEventListener('click',()=>{$('#navLinks').classList.remove('open');$$('.nav-link').forEach(n=>n.classList.remove('active'));a.classList.add('active')}));
-const menu=$('#menuBtn');menu.addEventListener('click',()=>$('#navLinks').classList.toggle('open'));
-const sections=$$('main section[id]');const navObserver=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){$$('.nav-link').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-40% 0px -50% 0px'});sections.forEach(s=>navObserver.observe(s));
-$('.project-card,.skill-card').forEach(card=>{card.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.transform='perspective(900px) rotateX('+(-y*7)+'deg) rotateY('+(x*8)+'deg) translateY(-7px)';card.style.boxShadow='0 22px 55px rgba(0,0,0,.28),0 0 28px rgba(105,228,223,.08)'});card.addEventListener('pointerleave',()=>{card.style.transform='';card.style.boxShadow=''})});
-$('#year').textContent=new Date().getFullYear();
+(() => {
+  'use strict';
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+  const revealItems = $$('.reveal');
+  const showAll = () => {
+    document.body.classList.remove('motion-ready');
+    revealItems.forEach(el => el.classList.add('visible'));
+  };
+
+  // Keep the complete portfolio visible unless the reveal observer is ready.
+  try {
+    if ('IntersectionObserver' in window &&
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const revealObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
+      revealItems.forEach(el => revealObserver.observe(el));
+      document.body.classList.add('motion-ready');
+      // Safety net: never leave content hidden if an observer callback is missed.
+      window.setTimeout(showAll, 2200);
+    } else {
+      showAll();
+    }
+  } catch (error) {
+    showAll();
+  }
+
+  const topbar = $('#topbar');
+  const progress = $('#progress');
+  const glow = $('#cursorGlow');
+  const ring = $('#cursorRing');
+  const updateScroll = () => {
+    const y = window.scrollY;
+    if (topbar) topbar.classList.toggle('scrolled', y > 20);
+    if (progress) {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = (max > 0 ? y / max * 100 : 0) + '%';
+    }
+  };
+  window.addEventListener('scroll', updateScroll, { passive: true });
+  updateScroll();
+
+  window.addEventListener('pointermove', event => {
+    if (event.pointerType === 'touch') return;
+    if (glow) {
+      glow.style.opacity = '1';
+      glow.style.left = event.clientX + 'px';
+      glow.style.top = event.clientY + 'px';
+    }
+    if (ring) {
+      ring.style.opacity = '1';
+      ring.style.left = event.clientX + 'px';
+      ring.style.top = event.clientY + 'px';
+    }
+    const panel = event.target.closest && event.target.closest('.panel');
+    if (panel) {
+      const rect = panel.getBoundingClientRect();
+      panel.style.setProperty('--mx', (event.clientX - rect.left) + 'px');
+      panel.style.setProperty('--my', (event.clientY - rect.top) + 'px');
+    }
+  }, { passive: true });
+  window.addEventListener('pointerout', event => {
+    if (!event.relatedTarget) {
+      if (glow) glow.style.opacity = '0';
+      if (ring) ring.style.opacity = '0';
+    }
+  });
+
+  const navLinks = $$('.nav-link');
+  const nav = $('#navLinks');
+  const menu = $('#menuBtn');
+  navLinks.forEach(link => link.addEventListener('click', () => {
+    if (nav) nav.classList.remove('open');
+    navLinks.forEach(item => item.classList.remove('active'));
+    link.classList.add('active');
+  }));
+  if (menu && nav) menu.addEventListener('click', () => nav.classList.toggle('open'));
+
+  if ('IntersectionObserver' in window) {
+    const sections = $$('main section[id]');
+    const navObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => link.classList.toggle(
+            'active', link.getAttribute('href') === '#' + entry.target.id
+          ));
+        }
+      });
+    }, { rootMargin: '-40% 0px -50% 0px' });
+    sections.forEach(section => navObserver.observe(section));
+  }
+
+  $$('.project-card, .skill-card').forEach(card => {
+    card.addEventListener('pointermove', event => {
+      if (event.pointerType === 'touch') return;
+      const rect = card.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = 'perspective(900px) rotateX(' + (-y * 5) +
+        'deg) rotateY(' + (x * 6) + 'deg) translateY(-5px)';
+    });
+    card.addEventListener('pointerleave', () => { card.style.transform = ''; });
+  });
+
+  const year = $('#year');
+  if (year) year.textContent = new Date().getFullYear();
+})();
 </script>
 </body></html>
