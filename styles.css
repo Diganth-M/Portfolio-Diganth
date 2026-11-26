@@ -147,8 +147,3 @@ h1 .ch,h2 .ch{color:hsl(calc(188 + var(--i)*9) 95% 70%)}
 .chip.li .icon{color:#0a66c2;background:linear-gradient(#fff,#fff) center/70% 70% no-repeat}
 .chip:hover,.chip:focus-visible{color:#fff}
 .chip:hover .icon,.chip:focus-visible .icon{color:#fff;background:none}
-
-/* Fail-safe visibility: content stays readable even if motion scripts or observers fail. */
-.js .reveal { opacity: 1 !important; transform: none !important; }
-.js h2.reveal:not(.in) .ch, .js h2.reveal.from-top:not(.in) .ch { transform: none !important; }
-@media (prefers-reduced-motion: reduce) { .js .reveal, .js h2.reveal .ch { opacity: 1 !important; transform: none !important; } }
