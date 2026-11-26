@@ -2,14 +2,20 @@
 
 A responsive, animated personal portfolio for M Diganth, a Computer Science and Engineering undergraduate.
 
+## Live website
+
+Once the first GitHub Actions deployment finishes successfully:
+
+**https://diganth-m.github.io/Portfolio-Diganth/**
+
 ## Features
 
-- Dark, responsive layout with mobile navigation
-- Scroll-reveal animations with direction-aware entry
+- Responsive dark portfolio layout with mobile navigation
+- Direction-aware scroll reveal animations
 - Mouse-following ambient glow and interactive card tilt
-- Animated hero illustration, hover states and click ripples
-- Sections for about, skills, projects, education, internship, certifications and contact
-- Direct email, phone, GitHub, LinkedIn and general location links
+- Animated hero illustration, hover states and click feedback
+- About, skills, projects, education, internship, certifications and contact sections
+- Direct email, phone, location, GitHub and LinkedIn links
 - Reduced-motion accessibility support
 
 ## Run locally
@@ -22,20 +28,17 @@ No build tools or dependencies are required.
 
 Google Fonts are loaded from Google Fonts; the page otherwise runs as a static website.
 
-## Customize
+## Deployment
 
-Update the content and links in `index.html` if your contact details, profile URLs, education or projects change.
+The repository includes a GitHub Actions workflow at `.github/workflows/deploy.yml`. It publishes the root website files to GitHub Pages whenever code is pushed to `main`, and can also be run manually from the **Actions** tab.
 
-## Deploy with GitHub Pages
+After pushing, open **Actions** in the repository and wait for **Deploy portfolio to GitHub Pages** to complete successfully. If GitHub asks you to choose a Pages source, open **Settings → Pages** and select **GitHub Actions** under **Build and deployment**.
 
-1. Open the repository **Settings → Pages**.
-2. Under **Build and deployment**, choose **Deploy from a branch**.
-3. Select **main** and **/(root)**, then save.
-4. GitHub Pages will publish the site at the repository's Pages URL once deployment finishes.
+The website URL is:
+https://diganth-m.github.io/Portfolio-Diganth/
 
 ## Contact
 
 - Email: diganthhema5712@gmail.com
 - GitHub: https://github.com/Diganth-M
 - LinkedIn: https://www.linkedin.com/in/diganth-m-982425315/
-
